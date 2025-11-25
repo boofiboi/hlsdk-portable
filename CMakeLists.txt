@@ -47,6 +47,7 @@ option(USE_NOVGUI_SCOREBOARD "Prefer non-VGUI Scoreboard when USE_VGUI is enable
 option(USE_VOICEMGR "Enable VOICE MANAGER." OFF)
 option(BUILD_CLIENT "Build client dll" ON)
 option(BUILD_SERVER "Build server dll" ON)
+<<<<<<< HEAD
 option(LTO "Enable interprocedural optimization" OFF)
 option(POLLY "Enable pollyhedral optimization" OFF)
 option(ANDROID_APK "Enable APK styled deploy" OFF)
@@ -89,6 +90,19 @@ if((WIN32 OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 else()
 	option(GOLDSOURCE_SUPPORT "Build goldsource compatible client library" OFF)
 endif()
+=======
+option(GOLDSOURCE_SUPPORT "Build goldsource compatible client library" OFF)
+# option(64BIT "Disable auto -m32 appending to compiler flags" ON)
+set(GAMEDIR "valve" CACHE STRING "Gamedir path")
+set(SERVER_INSTALL_DIR "dlls" CACHE STRING "Where put server dll")
+set(CLIENT_INSTALL_DIR "cl_dlls" CACHE STRING "Where put client dll")
+set(SERVER_LIBRARY_NAME "hl" CACHE STRING "Library name for Linux/MacOS/Windows")
+>>>>>>> sultim/master
+
+# @RT - Must be always 64-bit
+set(64BIT 1)
+add_definitions(-DHL1RT_HACKS=1)
+# @RT
 
 #-----------------
 # MAIN BUILD CODE \

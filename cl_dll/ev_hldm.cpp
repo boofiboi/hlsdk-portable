@@ -1459,9 +1459,15 @@ void EV_EgonFire( event_args_t *args )
 
 			int iBeamModelIndex = gEngfuncs.pEventAPI->EV_FindModelIndex( EGON_BEAM_SPRITE );
 
+#if !HL1RT_HACKS
 			float r = 50.0f;
 			float g = 50.0f;
 			float b = 125.0f;
+#else
+			float r = 102;
+			float g = 102;
+			float b = 255;
+#endif
 
 			// if( IEngineStudio.IsHardware() )
 			{
@@ -1478,7 +1484,9 @@ void EV_EgonFire( event_args_t *args )
 			pBeam2 = gEngfuncs.pEfxAPI->R_BeamEntPoint( idx | 0x1000, tr.endpos, iBeamModelIndex, 99999, 5.0, 0.08, 0.7, 25, 0, 0, r, g, b );
 
 			// Vit_amiN: egon beam flare
+#if !HL1RT_HACKS
 			pFlare = gEngfuncs.pEfxAPI->R_TempSprite( tr.endpos, vec3_origin, 1.0, gEngfuncs.pEventAPI->EV_FindModelIndex( EGON_FLARE_SPRITE ), kRenderGlow, kRenderFxNoDissipation, 1.0, 99999, FTENT_SPRCYCLE | FTENT_PERSIST );
+#endif
 		}
 	}
 

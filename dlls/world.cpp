@@ -607,13 +607,23 @@ void CWorld::Precache( void )
 	// g-cont. moved here to right restore global WaveHeight on save\restore level
 	CVAR_SET_FLOAT( "sv_wateramp", pev->scale );
 
+#if HL1RT_HACKS
+	CVAR_SET_STRING("_rt_chapter", "");
+#endif
+
 	if( pev->netname )
 	{
 		ALERT( at_aiconsole, "Chapter title: %s\n", STRING( pev->netname ) );
 		CBaseEntity *pEntity = CBaseEntity::Create( "env_message", g_vecZero, g_vecZero, NULL );
 		if( pEntity )
 		{
+#if !HL1RT_HACKS
 			pEntity->SetThink( &CBaseEntity::SUB_CallUseToggle );
+#else
+			pEntity->SetThink(&CWorld::ShowChapterLogo);
+			CVAR_SET_STRING("_rt_chapter", STRING(pev->netname));
+			PRECACHE_SOUND("plats/bigstop1.wav");
+#endif
 			pEntity->pev->message = pev->netname;
 			pev->netname = 0;
 			pEntity->pev->nextthink = gpGlobals->time + 0.3f;
@@ -716,4 +726,62 @@ void CWorld::KeyValue( KeyValueData *pkvd )
 	else
 		CBaseEntity::KeyValue( pkvd );
 }
+
+#if HL1RT_HACKS
+bool rt_showchapterlogo = false;
+bool rt_showlambdacore = false;
+
+void CWorld::ShowChapterLogo()
+{
+    rt_showchapterlogo = false;
+	rt_showlambdacore = false;
+
+    // use chapter logo instead of text
+    const char* allowed[] =
+    {
+        "C2A4TITLE2",
+        "C2A5TITLE",
+        "C3A1TITLE",
+        "C3A2TITLE",
+        "C4A1ATITLE",
+        "C4A1TITLE",
+        "C4A2TITLE",
+        "C4A3TITLE",
+        // "CR27",
+        "C0A1TITLE",
+        "C1A1TITLE",
+        "C1A2TITLE",
+        "C1A3TITLE",
+        "C1A4TITLE",
+        "C2A1TITLE",
+        "C2A2TITLE",
+        "C2A3TITLE",
+        "C2A4TITLE1",
+    };
+
+    const char* chapter = CVAR_GET_STRING("_rt_chapter");
+    if (chapter)
+    {
+        for (const char* a : allowed)
+        {
+            if (strcmp(chapter, a) == 0)
+            {
+                rt_showchapterlogo = true;
+                break;
+            }
+        }
+    }
+
+    if (rt_showchapterlogo && strcmp(chapter, "C3A2TITLE") == 0)
+    {
+		rt_showlambdacore = true;
+    }
+
+    // use old chapter logo, if not found
+    if (!rt_showchapterlogo)
+    {
+        SUB_CallUseToggle();
+    }
+}
+#endif
 
