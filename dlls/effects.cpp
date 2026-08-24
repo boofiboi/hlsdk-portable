@@ -2012,6 +2012,9 @@ void CMessage::Precache( void )
 {
 	if( pev->noise )
 		PRECACHE_SOUND( STRING( pev->noise ) );
+#if HL1RT_HACKS
+	PRECACHE_SOUND( "plats/bigstop1.wav" );
+#endif
 }
 
 void CMessage::KeyValue( KeyValueData *pkvd )
@@ -2039,17 +2042,32 @@ void CMessage::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useT
 {
 	CBaseEntity *pPlayer = NULL;
 
-	if( pev->spawnflags & SF_MESSAGE_ALL )
-		UTIL_ShowMessageAll( STRING( pev->message ) );
+	if( pActivator && pActivator->IsPlayer() )
+		pPlayer = pActivator;
 	else
-	{
-		if( pActivator && pActivator->IsPlayer() )
-			pPlayer = pActivator;
-		else
-			pPlayer = CBaseEntity::Instance( g_engfuncs.pfnPEntityOfEntIndex( 1 ) );
+		pPlayer = CBaseEntity::Instance( g_engfuncs.pfnPEntityOfEntIndex( 1 ) );
 
+#if HL1RT_HACKS
+	const char *pszMessage = STRING( pev->message );
+	if( pszMessage && !strcmp( pszMessage, "CHUMTOAD" ) )
+	{
+		CVAR_SET_STRING( "_rt_chapter", pszMessage );
+		CVAR_SET_FLOAT( "_rt_chaptershow", 1.0f );
 		if( pPlayer )
-			UTIL_ShowMessage( STRING( pev->message ), pPlayer );
+			EMIT_SOUND( pPlayer->edict(), CHAN_STATIC, "plats/bigstop1.wav", 1.0f, ATTN_NONE );
+		else
+			EMIT_SOUND( edict(), CHAN_STATIC, "plats/bigstop1.wav", 1.0f, ATTN_NONE );
+	}
+	else
+#endif
+	{
+		if( pev->spawnflags & SF_MESSAGE_ALL )
+			UTIL_ShowMessageAll( STRING( pev->message ) );
+		else
+		{
+			if( pPlayer )
+				UTIL_ShowMessage( STRING( pev->message ), pPlayer );
+		}
 	}
 
 	if( pev->noise )

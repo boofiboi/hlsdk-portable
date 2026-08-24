@@ -521,6 +521,9 @@ void CWorld::Precache( void )
 	PRECACHE_SOUND( "weapons/ric3.wav" );
 	PRECACHE_SOUND( "weapons/ric4.wav" );
 	PRECACHE_SOUND( "weapons/ric5.wav" );
+#if HL1RT_HACKS
+	PRECACHE_SOUND( "plats/bigstop1.wav" );
+#endif
 
 	//
 	// Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
@@ -757,6 +760,14 @@ void CWorld::ShowChapterLogo()
         "C2A2TITLE",
         "C2A3TITLE",
         "C2A4TITLE1",
+		"BA_TRAMTITLE",
+		"BA_SECURITYTITLE",
+		"BA_CANALSTITLE",
+		"BA_YARDTITLE",
+		"BA_XENTITLE",
+		"BA_POWERTITLE",
+		"BA_TELEPORTTITLE",
+		"CHUMTOAD"
     };
 
     const char* chapter = CVAR_GET_STRING("_rt_chapter");
