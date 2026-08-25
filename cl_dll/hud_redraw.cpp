@@ -78,7 +78,7 @@ void CHud::Think( void )
 	else
 	{
 		// set a new sensitivity that is proportional to the change from the FOV default
-		m_flMouseSensitivity = sensitivity->value * ((float)newfov / (float)default_fov->value) * CVAR_GET_FLOAT("zoom_sensitivity_ratio");
+		m_flMouseSensitivity = sensitivity->value * ((float)newfov / Q_max( default_fov->value, 90 )) * CVAR_GET_FLOAT("zoom_sensitivity_ratio");
 	}
 
 	// think about default fov
@@ -258,12 +258,13 @@ int CHud::DrawHudString( int xpos, int ypos, int iMaxX, const char *szIt, int r,
 		int w = gHUD.m_scrinfo.charWidths['M'];
 		if( xpos + w  > iMaxX )
 			return xpos;
-		if( ( *szIt == '^' ) && ( *( szIt + 1 ) >= '0') && ( *( szIt + 1 ) <= '7') )
+		if( ( *szIt == '^' ) && ( *( szIt + 1 ) >= '0') && ( *( szIt + 1 ) <= '9') )
 		{
 			szIt++;
-			r = colors[*szIt - '0'][0];
-			g = colors[*szIt - '0'][1];
-			b = colors[*szIt - '0'][2];
+			int index = (*szIt - '0') & 7;
+			r = colors[index][0];
+			g = colors[index][1];
+			b = colors[index][2];
 			if( !*(++szIt) )
 				return xpos;
 		}
@@ -288,12 +289,13 @@ int DrawUtfString( int xpos, int ypos, int iMaxX, const char *szIt, int r, int g
 			int w = gHUD.m_scrinfo.charWidths['M'];
 			if( xpos + w  > iMaxX )
 				return xpos;
-			if( ( *szIt == '^' ) && ( *( szIt + 1 ) >= '0') && ( *( szIt + 1 ) <= '7') )
+			if( ( *szIt == '^' ) && ( *( szIt + 1 ) >= '0') && ( *( szIt + 1 ) <= '9') )
 			{
 				szIt++;
-				r = colors[*szIt - '0'][0];
-				g = colors[*szIt - '0'][1];
-				b = colors[*szIt - '0'][2];
+				int index = (*szIt - '0') & 7;
+				r = colors[index][0];
+				g = colors[index][1];
+				b = colors[index][2];
 				if( !*(++szIt) )
 					return xpos;
 			}
