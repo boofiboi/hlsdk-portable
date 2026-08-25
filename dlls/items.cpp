@@ -220,6 +220,7 @@ class CItemArmorVest : public CItem
 		{
 			pPlayer->pev->armorvalue += 60;
 			pPlayer->pev->armorvalue = Q_min( pPlayer->pev->armorvalue, MAX_NORMAL_BATTERY );
+			pPlayer->m_bHasArmor = TRUE;
 
 			EMIT_SOUND( pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM );
 
@@ -254,6 +255,7 @@ class CItemHelmet : public CItem
 		{
 			pPlayer->pev->armorvalue += 40;
 			pPlayer->pev->armorvalue = Q_min( pPlayer->pev->armorvalue, MAX_NORMAL_BATTERY );
+			pPlayer->m_bHasArmor = TRUE;
 
 			EMIT_SOUND( pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM );
 
@@ -296,6 +298,7 @@ class CItemBattery : public CItem
 
 			pPlayer->pev->armorvalue += gSkillData.batteryCapacity;
 			pPlayer->pev->armorvalue = Q_min( pPlayer->pev->armorvalue, MAX_NORMAL_BATTERY );
+			pPlayer->m_bHasArmor = TRUE;
 
 			EMIT_SOUND( pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM );
 

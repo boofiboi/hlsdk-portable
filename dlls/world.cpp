@@ -760,6 +760,7 @@ void CWorld::ShowChapterLogo()
         "C2A2TITLE",
         "C2A3TITLE",
         "C2A4TITLE1",
+		"BA_HAZARDTITLE",
 		"BA_TRAMTITLE",
 		"BA_SECURITYTITLE",
 		"BA_CANALSTITLE",
@@ -767,6 +768,8 @@ void CWorld::ShowChapterLogo()
 		"BA_XENTITLE",
 		"BA_POWERTITLE",
 		"BA_TELEPORTTITLE",
+		"BA_OUTROTITLE",
+		// Secret in ba_xen2 (I thought id be funny if it got an actual chapter title)
 		"CHUMTOAD"
     };
 

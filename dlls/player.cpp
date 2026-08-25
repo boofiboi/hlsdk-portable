@@ -110,6 +110,7 @@ TYPEDESCRIPTION	CBasePlayer::m_playerSaveData[] =
 	DEFINE_FIELD( CBasePlayer, m_iExtraSoundTypes, FIELD_INTEGER ),
 	DEFINE_FIELD( CBasePlayer, m_iWeaponFlash, FIELD_INTEGER ),
 	DEFINE_FIELD( CBasePlayer, m_fLongJump, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CBasePlayer, m_bHasArmor, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBasePlayer, m_fInitHUD, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBasePlayer, m_tbdPrev, FIELD_TIME ),
 
@@ -2331,8 +2332,21 @@ void CBasePlayer::CheckSuitUpdate()
 #if HL1RT_HACKS
     if( IsAlive() )
 	{
-		bool hasSuit = !!( pev->weapons & ( 1u << WEAPON_SUIT ) );
-		CVAR_SET_FLOAT( "_rt_labcoat", hasSuit ? 0 : 1 );
+		char gamedir[256];
+		GET_GAME_DIR( gamedir );
+		if( strstr( gamedir, "bshift" ) != NULL )
+		{
+			if( pev->armorvalue > 0.0f )
+			{
+				m_bHasArmor = TRUE;
+			}
+			CVAR_SET_FLOAT( "_rt_labcoat", m_bHasArmor ? 0 : 1 );
+		}
+		else
+		{
+			bool hasSuit = !!( pev->weapons & ( 1u << WEAPON_SUIT ) );
+			CVAR_SET_FLOAT( "_rt_labcoat", hasSuit ? 0 : 1 );
+		}
 	}
 #endif
 
@@ -2986,6 +3000,30 @@ void CBasePlayer::Spawn( void )
 	m_bitsDamageType = 0;
 	m_afPhysicsFlags = 0;
 	m_fLongJump = FALSE;// no longjump module. 
+#if HL1RT_HACKS
+	char gamedir[256];
+	GET_GAME_DIR( gamedir );
+	if( strstr( gamedir, "bshift" ) != NULL )
+	{
+		const char *mapname = STRING( gpGlobals->mapname );
+		if( mapname && (
+			strstr( mapname, "ba_tram" ) != NULL ||
+			strstr( mapname, "ba_security1" ) != NULL ||
+			strstr( mapname, "ba_security2" ) != NULL ||
+			strstr( mapname, "ba_hazard" ) != NULL ) )
+		{
+			m_bHasArmor = FALSE;
+		}
+		else
+		{
+			m_bHasArmor = TRUE;
+		}
+	}
+	else
+	{
+		m_bHasArmor = FALSE;
+	}
+#endif
 
 	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "slj", "0" );
 	g_engfuncs.pfnSetPhysicsKeyValue( edict(), "hl", "1" );
@@ -3647,6 +3685,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		break;
 	case 101:
 		gEvilImpulse101 = TRUE;
+		m_bHasArmor = TRUE;
 		GiveNamedItem( "item_suit" );
 		GiveNamedItem( "item_armorvest" );
 		GiveNamedItem( "item_helmet" );
