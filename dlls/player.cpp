@@ -2328,6 +2328,14 @@ void CBasePlayer::CheckSuitUpdate()
 	int isentence = 0;
 	int isearch = m_iSuitPlayNext;
 
+#if HL1RT_HACKS
+    if( IsAlive() )
+	{
+		bool hasSuit = !!( pev->weapons & ( 1u << WEAPON_SUIT ) );
+		CVAR_SET_FLOAT( "_rt_labcoat", hasSuit ? 0 : 1 );
+	}
+#endif
+
 	// Ignore suit updates if no suit
 	if( !( pev->weapons & ( 1 << WEAPON_SUIT ) ) )
 		return;
@@ -2604,6 +2612,14 @@ void CBasePlayer::UpdatePlayerSound( void )
 	//ALERT( at_console, "%d/%d\n", iVolume, m_iTargetVolume );
 }
 
+#if HL1RT_HACKS
+extern bool rt_showchapterlogo;
+extern bool rt_showlambdacore;
+
+static float rt_chaptertime_sound = -1;
+static float rt_chaptertime_image = -1;
+#endif
+
 void CBasePlayer::PostThink()
 {
 	if( g_fGameOver )
@@ -2611,6 +2627,49 @@ void CBasePlayer::PostThink()
 
 	if( !IsAlive() )
 		goto pt_end;
+
+#if HL1RT_HACKS
+	if(rt_showchapterlogo)
+	{
+		// just show after level start
+		if (!rt_showlambdacore)
+		{
+			rt_chaptertime_sound = gpGlobals->time + 2.9f;
+			rt_chaptertime_image = gpGlobals->time + 3.0f;
+			rt_showchapterlogo = false;
+		}
+		else
+		{
+			// stop any original music
+			CLIENT_COMMAND(edict(), "cd stop\n");
+
+			// keep checking the camera pos: if moving down with a lift
+			float z = pev->origin.z + pev->view_ofs.z;
+
+			if (z < 2000)
+			{
+				// start music
+				CLIENT_COMMAND(edict(), "cd play rt/Project_Borealis_OST_Threatening_Domain.mp3\n");
+
+				// sharp sound in the music track starts here
+				rt_chaptertime_image = gpGlobals->time + 5.6f;
+				rt_showchapterlogo = false;
+			}
+		}
+	}
+
+	if (rt_chaptertime_sound >= 0.0f && gpGlobals->time > rt_chaptertime_sound)
+	{
+		EMIT_SOUND(ENT(pev), CHAN_STATIC, "plats/bigstop1.wav", 1.0f, ATTN_NONE);
+		rt_chaptertime_sound = -1;
+	}
+
+	if (rt_chaptertime_image >= 0.0f && gpGlobals->time > rt_chaptertime_image)
+	{
+		CVAR_SET_FLOAT("_rt_chaptershow", 1);
+		rt_chaptertime_image = -1;
+	}
+#endif
 
 	// Handle Tank controlling
 	if( m_pTank != 0 )
