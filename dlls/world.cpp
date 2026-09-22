@@ -612,7 +612,12 @@ void CWorld::Precache( void )
 
 #if HL1RT_HACKS
 	CVAR_SET_STRING("_rt_chapter", "");
-	if( pev->netname )
+	if( FStrEq( STRING( gpGlobals->mapname ), "ba_power2" ) )
+	{
+		// "Power Struggle" only displays on the first map (ba_power1)
+		pev->netname = 0;
+	}
+	else if( pev->netname )
 	{
 		if( FStrEq( STRING( pev->netname ), "POWER STRUGGLE" ) )
 			pev->netname = ALLOC_STRING( "BA_POWERTITLE" );
