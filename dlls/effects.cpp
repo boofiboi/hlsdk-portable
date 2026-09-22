@@ -2049,9 +2049,10 @@ void CMessage::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useT
 
 #if HL1RT_HACKS
 	const char *pszMessage = STRING( pev->message );
-	if( pszMessage && !strcmp( pszMessage, "CHUMTOAD" ) )
+	if( pszMessage && ( !strcmp( pszMessage, "CHUMTOAD" ) || !strcmp( pszMessage, "BA_TELEPORTTITLE" ) || !strcmp( pszMessage, "A LEAP OF FAITH" ) ) )
 	{
-		CVAR_SET_STRING( "_rt_chapter", pszMessage );
+		const char *pszChapter = !strcmp( pszMessage, "A LEAP OF FAITH" ) ? "BA_TELEPORTTITLE" : pszMessage;
+		CVAR_SET_STRING( "_rt_chapter", pszChapter );
 		CVAR_SET_FLOAT( "_rt_chaptershow", 1.0f );
 		if( pPlayer )
 			EMIT_SOUND( pPlayer->edict(), CHAN_STATIC, "plats/bigstop1.wav", 1.0f, ATTN_NONE );

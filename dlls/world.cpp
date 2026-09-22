@@ -612,6 +612,22 @@ void CWorld::Precache( void )
 
 #if HL1RT_HACKS
 	CVAR_SET_STRING("_rt_chapter", "");
+	if( pev->netname )
+	{
+		if( FStrEq( STRING( pev->netname ), "POWER STRUGGLE" ) )
+			pev->netname = ALLOC_STRING( "BA_POWERTITLE" );
+		else if( FStrEq( STRING( pev->netname ), "A LEAP OF FAITH" ) )
+			pev->netname = ALLOC_STRING( "BA_TELEPORTTITLE" );
+	}
+	else
+	{
+		if( FStrEq( STRING( gpGlobals->mapname ), "ba_power1" ) )
+			pev->netname = ALLOC_STRING( "BA_POWERTITLE" );
+		else if( FStrEq( STRING( gpGlobals->mapname ), "ba_teleport2" ) || ( pev->message && FStrEq( STRING( pev->message ), "A LEAP OF FAITH" ) ) )
+			pev->netname = ALLOC_STRING( "BA_TELEPORTTITLE" );
+		else if( FStrEq( STRING( gpGlobals->mapname ), "ba_outro" ) )
+			pev->netname = ALLOC_STRING( "BA_OUTROTITLE" );
+	}
 #endif
 
 	if( pev->netname )
@@ -760,22 +776,32 @@ void CWorld::ShowChapterLogo()
         "C2A2TITLE",
         "C2A3TITLE",
         "C2A4TITLE1",
-		"BA_HAZARDTITLE",
 		"BA_TRAMTITLE",
 		"BA_SECURITYTITLE",
 		"BA_CANALSTITLE",
 		"BA_YARDTITLE",
+		"BA_TELEPORTTITLE",
 		"BA_XENTITLE",
 		"BA_POWERTITLE",
-		"BA_TELEPORTTITLE",
 		"BA_OUTROTITLE",
-		// Secret in ba_xen2 (I thought id be funny if it got an actual chapter title)
+		// Secret in ba_xen2 (I thought id be funny and give it an actual chapter title)
 		"CHUMTOAD"
     };
 
     const char* chapter = CVAR_GET_STRING("_rt_chapter");
     if (chapter)
     {
+        if (strcmp(chapter, "POWER STRUGGLE") == 0)
+        {
+            chapter = "BA_POWERTITLE";
+            CVAR_SET_STRING("_rt_chapter", "BA_POWERTITLE");
+        }
+        else if (strcmp(chapter, "A LEAP OF FAITH") == 0)
+        {
+            chapter = "BA_TELEPORTTITLE";
+            CVAR_SET_STRING("_rt_chapter", "BA_TELEPORTTITLE");
+        }
+
         for (const char* a : allowed)
         {
             if (strcmp(chapter, a) == 0)
