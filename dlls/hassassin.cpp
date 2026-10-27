@@ -701,12 +701,20 @@ void CHAssassin::RunAI( void )
 
 		pev->renderamt = Q_max( pev->renderamt - 50, m_iTargetRanderamt );
 		pev->rendermode = kRenderTransTexture;
+#if HL1RT_HACKS
+		pev->renderfx = 63;
+#endif
 	}
 	else if( pev->renderamt < m_iTargetRanderamt )
 	{
 		pev->renderamt = Q_min( pev->renderamt + 50, m_iTargetRanderamt );
 		if( pev->renderamt == 255 )
+		{
 			pev->rendermode = kRenderNormal;
+#if HL1RT_HACKS
+			pev->renderfx = kRenderFxNone;
+#endif
+		}
 	}
 
 	if( m_Activity == ACT_RUN || m_Activity == ACT_WALK )
