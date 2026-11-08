@@ -747,23 +747,12 @@ void CWorld::ShowChapterLogo()
 
 	const char* allowed[] =
 	{
-		"C2A4TITLE2",
-		"C2A5TITLE",
-		"C3A1TITLE",
-		"C3A2TITLE",
-		"C4A1ATITLE",
-		"C4A1TITLE",
-		"C4A2TITLE",
-		"C4A3TITLE",
-		"C0A1TITLE",
-		"C1A1TITLE",
-		"C1A2TITLE",
-		"C1A3TITLE",
-		"C1A4TITLE",
-		"C2A1TITLE",
-		"C2A2TITLE",
-		"C2A3TITLE",
-		"C2A4TITLE1",
+		"OF1A3TITLE",
+		"OF2A1TITLE",
+		"OF1A5TITLE",
+		"OF2A4TITLE",
+		"OF3A1TITLE",
+		"OF3A3TITLE"
 	};
 
 	const char* chapter = CVAR_GET_STRING( "_rt_chapter" );
@@ -779,14 +768,11 @@ void CWorld::ShowChapterLogo()
 		}
 	}
 
-	if( rt_showchapterlogo && strcmp( chapter, "C3A2TITLE" ) == 0 )
-	{
-		rt_showlambdacore = true;
-	}
+    // use old chapter logo, if not found
+    if (!rt_showchapterlogo)
+    {
+        SUB_CallUseToggle();
+    }
 
-	if( !rt_showchapterlogo )
-	{
-		SUB_CallUseToggle();
-	}
 }
 #endif

@@ -22,9 +22,9 @@
 #pragma once
 #if !defined(HUD_H)
 #define HUD_H
-#define RGB_YELLOWISH 0x0000A000 //0,160,0
-#define RGB_REDISH 0x00FF1010 //255,160,0
-#define RGB_GREENISH 0x0000A000 //0,160,0
+#define RGB_YELLOWISH 0x0000FF00 //0,160,0
+#define RGB_REDISH 0x00001010 //255,160,0
+#define RGB_GREENISH 0x0000FF00 //0,255,0
 
 #include "wrect.h"
 #include "cl_dll.h"
@@ -34,7 +34,7 @@
 #define DHN_DRAWZERO 1
 #define DHN_2DIGITS  2
 #define DHN_3DIGITS  4
-#define MIN_ALPHA	 100	
+#define MIN_ALPHA	 170	
 
 #define		HUDELEM_ACTIVE	1
 
