@@ -9,6 +9,7 @@
 *.dll
 *.pdb
 build/
+build_linux/
 CMakeLists.txt.*
 cmake_install.cmake
 *.orig
