@@ -752,7 +752,12 @@ void CWorld::ShowChapterLogo()
 		"OF1A5TITLE",
 		"OF2A4TITLE",
 		"OF3A1TITLE",
-		"OF3A3TITLE"
+		"OF3A3TITLE",
+		"OF4A1TITLE",
+		"OF4A4TITLE",
+		"OF5A1TITLE",
+		"OF6A1TITLE",
+		"OF6A4TITLE"
 	};
 
 	const char* chapter = CVAR_GET_STRING( "_rt_chapter" );
